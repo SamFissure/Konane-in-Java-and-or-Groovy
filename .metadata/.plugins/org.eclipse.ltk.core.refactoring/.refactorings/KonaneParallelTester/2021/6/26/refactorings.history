@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;Board.java&apos; to &apos;com.konane.java.Constants.java&apos;&#x0D;&#x0A;- Original project: &apos;KonaneParallelTester&apos;&#x0D;&#x0A;- Destination element: &apos;com.konane.java.Constants.java&apos;&#x0D;&#x0A;- Original element: &apos;com.konane.java.Board.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=KonaneJava/src&lt;com.konane.java{Constants.java" element1="/src&lt;com.konane.java{Board.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1624307647585" units="1" version="1.0"/>
+</session>

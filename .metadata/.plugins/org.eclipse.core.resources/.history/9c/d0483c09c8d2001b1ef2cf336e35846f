@@ -1,0 +1,61 @@
+package com.konane.java;
+
+import java.util.ArrayList;
+
+public class ThreadedKonane extends Board {
+
+	Board board;
+	int index;
+	ArrayList<Board> boardlist;
+	
+	public void coordinate() {
+		//ensures lowest bval possible in program
+		this.board.bval=MIN-1; 
+		//reset index for other functions and uses 
+		this.index=0;  
+
+		for (int i=0; i <8; i++) {
+			Board toAdd = this.board;
+			this.boardlist.add(i,toAdd);	
+		}
+	}
+	
+	
+	//synchronized method picks up a board...  increments taken perhaps. returns the board and the operation proceeds.
+	public synchronized Board getBoard() {
+		Board selected = boardlist.get(this.index);
+		this.index++;
+		return selected;
+	}
+	
+	
+	
+	Board comparison(Board board1, Board board2) {
+	    if (board1.bval<board2.bval)
+	    {
+	       return board2;
+	    }
+		return board1;
+	}
+	
+
+}
+/**     for(int n = 0;n<8; n++) {
+Thread th=new Thread();
+th.start();
+this.threadList.add(th);
+}
+this.prevBoard.bval=(MIN-1);
+for(int n=0;n<8;n++) {
+//stores the board
+this.prevBoard=this.board;
+
+//changes the board
+this.threadList.get(n).run();
+
+//compares the board...
+this.board=comparison(this.prevBoard,this.board);
+}
+for(int n =0 ;n<8;n++) {
+this.threadList.get(n).join();
+}*/

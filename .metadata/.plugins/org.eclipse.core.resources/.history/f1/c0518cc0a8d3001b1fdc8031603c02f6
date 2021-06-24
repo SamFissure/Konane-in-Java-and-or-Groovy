@@ -1,0 +1,95 @@
+package com.konane.java;
+
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+
+public class ThreadedKonane extends Board implements Callable<Board>{
+
+	Board board;
+	int index;
+	Board bArr[] = new Board[8];
+	ArrayList<Board> boardlist = new ArrayList<Board>();
+	ArrayList<Board> resultlist = new ArrayList<Board>();
+	public void cleanTurn() {
+		resultlist.clear();
+		boardlist.clear();
+		index=0;
+	}
+	public void coordinate(int color) {
+		//ensures lowest bval possible in program
+		playerColor=color;
+		board.bval = MIN-1;
+		//reset index for other functions and uses   
+		for (int i=0; i <8; i++) {
+			boardlist.add(board);
+			System.out.println("added at"+ i);
+		}
+		for(Board boards : boardlist) {
+			System.out.println(boards.bval);
+		}
+	}
+	
+	
+	//synchronized method picks up a board...  
+	//increments index. returns the board and the operation proceeds.
+
+	
+	
+	
+	public void comparison() {
+		Board result = this.resultlist.get(0);
+		for (int i=0;i<7;i++) {
+			if(result.bval<this.resultlist.get(i+1).bval) {
+				result=this.resultlist.get(i+1);
+			}
+		}
+		this.board= result;
+	}
+
+
+	//uselesss now, relic from Runnable, using it as reference
+//	public void run() {
+		// TODO Auto-generated method stub
+//		Board selected= new Board();
+//		int id=this.index;
+//		synchronized(this) {
+//			selected = this.boardlist.get(this.index);
+//			this.index++;
+//			System.out.println(this.index);
+//		}
+//		selected.threadKonane(id, MIN, MAX, this.playerColor);
+//		synchronized(this) {
+//			this.resultlist.add(selected);
+//			System.out.println(id +" finished");
+//		}
+//		
+//	}
+	@Override
+	public Board call() throws Exception {
+		// TODO Auto-generated method stub
+		
+		
+		return board;
+	}
+	
+
+}
+/**     for(int n = 0;n<8; n++) {
+Thread th=new Thread();
+th.start();
+this.threadList.add(th);
+}
+this.prevBoard.bval=(MIN-1);
+for(int n=0;n<8;n++) {
+//stores the board
+this.prevBoard=this.board;
+
+//changes the board
+this.threadList.get(n).run();
+
+//compares the board...
+this.board=comparison(this.prevBoard,this.board);
+}
+for(int n =0 ;n<8;n++) {
+this.threadList.get(n).join();
+}*/

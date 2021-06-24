@@ -1,0 +1,15 @@
+package com.konane.java;
+
+public class ThreadEval extends ThreadedKonane {
+
+	ThreadedKonane tBoard = new ThreadedKonane();
+	
+	//below used in threaded only
+		ThreadedKonane comparison(ThreadedKonane board1, ThreadedKonane board2) {
+		    if (board1.bval<board2.bval)
+		    {
+		       return board2;
+		    }
+			return board1;
+		}
+}

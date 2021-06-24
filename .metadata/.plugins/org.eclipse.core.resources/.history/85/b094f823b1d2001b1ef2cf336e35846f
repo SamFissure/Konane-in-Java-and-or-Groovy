@@ -1,0 +1,51 @@
+package com.konane.java;
+
+import java.util.ArrayList;
+
+public class ThreadedKonane extends Board implements Runnable {
+
+	int id;
+	
+	//synchronized method picks up a board...  increments taken perhaps. returns the board and the operation proceeds.
+	ArrayList<Board> boardList = new ArrayList<Board>();
+	
+	//public Board turn() throws InterruptedException {
+
+    
+	//}
+	
+	
+	
+	@Override
+	public void run() {
+		
+	}
+	Board comparison(Board board1, Board board2) {
+	    if (board1.bval<board2.bval)
+	    {
+	       return board2;
+	    }
+		return board1;
+	}
+	
+
+}
+/**     for(int n = 0;n<8; n++) {
+Thread th=new Thread();
+th.start();
+this.threadList.add(th);
+}
+this.prevBoard.bval=(MIN-1);
+for(int n=0;n<8;n++) {
+//stores the board
+this.prevBoard=this.board;
+
+//changes the board
+this.threadList.get(n).run();
+
+//compares the board...
+this.board=comparison(this.prevBoard,this.board);
+}
+for(int n =0 ;n<8;n++) {
+this.threadList.get(n).join();
+}*/
