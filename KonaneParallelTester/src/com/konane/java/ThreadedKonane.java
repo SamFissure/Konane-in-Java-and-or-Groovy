@@ -10,6 +10,7 @@ public class ThreadedKonane extends Board implements Callable<Board>{
 	Board bArr[] = new Board[8];
 	ArrayList<Board> boardlist = new ArrayList<Board>();
 	ArrayList<Board> resultlist = new ArrayList<Board>();
+	
 	public void cleanTurn() {
 		this.resultlist.clear();
 		this.boardlist.clear();
@@ -20,10 +21,10 @@ public class ThreadedKonane extends Board implements Callable<Board>{
 		//ensures lowest bval possible in program
 		this.playerColor=color;
 		 
-		//reset index for other functions and uses   
+		   
 		for (int i=0; i <8; i++) {
 			this.boardlist.add(this.board);	
-			System.out.println("added at"+ i);
+			System.out.println("added at "+ i);
 		}
 	}
 	

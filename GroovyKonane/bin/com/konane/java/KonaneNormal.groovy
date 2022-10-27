@@ -4,10 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-//System.nanoTime() (in spite of issues)
-//Use something else to monitor time taken by entire game, nano is bad at long time expanses
-public class Konane extends ThreadedKonane{
-	
+
+public class KonaneNormal extends Board{
 	/*Order of Game Play*/
 	/*Game is lost when there are no longer any valid moves.*/
 			/* 1. determine who plays Black and is thus first.
@@ -64,7 +62,7 @@ public class Konane extends ThreadedKonane{
 	static void write_csv(ArrayList<Long> input) throws IOException{
 		FileWriter csv = null;
 		try {
-			csv = new FileWriter("parallel-moves-14-1.csv");
+			csv = new FileWriter("parallel-moves-L14-1.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,44 +82,36 @@ public class Konane extends ThreadedKonane{
 
 
 
-	public static void main(String[] args) throws IOException, InterruptedException{
+	public static void main(String[] args) throws IOException {
 
 
-		
-		@SuppressWarnings("resource")
 		Scanner read = new Scanner(System.in);
+		String dontCare;
 		/**TODO:: TOO MUCH IN MAIN!! REFACTOR!!**/
-			@SuppressWarnings("unused")
 			int level=0;
 			int turn=0;
 			int i,j,k,m;
+			//IS USED, Int value is irrelevant outside of function, but it expects to return an int.  Also useful in diagnostics, sometimes.
 			@SuppressWarnings("unused")
-			int alpha, beta, state;
+			int state;
 			long turnStart, turnTime;
-			
-			boolean AIturn, legalHumMove, first;
-			AIturn=false;
-			//INIT THREADS
-			ThreadedKonane evalBoard = new ThreadedKonane(); 
-			//evalBoard.bArr[evalBoard.index]=evalBoard.call();
-			
-			
 			//for recording time
-		    ArrayList<Long> times = new ArrayList<Long>();
-		    
+		    ArrayList<Long> times= new ArrayList<Long>();
 
 		    //who is first, whose turn is it, is it zero player,is the human player making a legal move?
-
+			boolean AIturn, legalHumMove, first;
+			AIturn=false;
 			//objects
+			Board board= new Board();
 			/**odd numbered depths end on min nodes, even on max. This doesn't work. This is to check for that**/
 			System.out.println("depth = " + depth +". (This should be an even number)\n");
-			evalBoard.zpgame=evalBoard.setItem("zero");
-			//evalBoard.zpgame=true;
+			board.zpgame=board.setItem("zero");
+			//board.zpgame=true;
 			//Who is black, goes first?
 			//AIturn=true;
 			AIcolor=1;
 			humanColor=2;
-			first=evalBoard.setItem("color");
+			first=board.setItem("color");
 			if(first) {
 				AIturn=true;
 				AIcolor=2;
@@ -129,59 +119,35 @@ public class Konane extends ThreadedKonane{
 			}
 			
 			/**SETS BOARD UP**/
-		    evalBoard.manualOverride();
+		    board.manualOverride();
 		    //Starts the clock.
-
 		    long gameStart = System.nanoTime();
 			while (true) {
-		            //if all moves lose.
-
-		        if(evalBoard.bval<-500){
-		            System.out.println("Game over, White loses");
-		            break;
-		                }
+				
 				if (AIturn) {
 		            /**This should be refactored into a function.
 		            *This initializes every board object to the same state, starts the clock on the move and
 		            *makes the **/
-					
-					
-
-
-
 					turnStart = System.nanoTime();
-					evalBoard.coordinate(2);
-					
-					evalBoard.comparison();
-					evalBoard.cleanTurn();
-		            //Initiates threads, calls them on the rows of the board
-		            //Alpha and Beta NOT set to Min and Max at first call.  This has improved efficiency and reduced error.
-		            //They ARE set to MAX and MIN later.
-					//th1( &board::threadKonane, &board1, 0, 1,2,depth,AIcolor);
+					state=board.ABMax(1, 2, level, depth, AIcolor);
+					board.display();
 
-					//Joins threads to main program after program run (some efficiencies to realize here).
+
+
 					
-					//makes a comparison between the 8 boards and selects the ideal board from them
 		           
-					//ThreadedKonane
-					
-					//board = evalBoard.comparison(board1, board2, board3, board4, board5, board6, board7, board8);
-		            
-					//displays prior board
-					evalBoard.display();
-					//if no valid moves
-		            if(evalBoard.bval<-500){
+
+
+		            //Uses the "bestmove" array to make the move chosen by algorithim
+		            board.makeMove(board.bestmove, AIcolor);
+		            //displays the move in start i, start j, destination i, destination j, format.
+		            board.displayMove();
+		            //displays the board
+					board.display();
+		            if(board.bval<-500){
 		                System.out.println("Game Over, Black Loses");
 		                break;
 		                }
-
-		            //Uses the "bestmove" array to make the move chosen by algorithim
-		            evalBoard.makeMove(evalBoard.bestmove, AIcolor);
-		            //displays the move in start i, start j, destination i, destination j, format.
-		            evalBoard.displayMove();
-		            //displays the board
-					evalBoard.display();
-
 					//Passes turn
 					AIturn = false;
 					//increments turn counter
@@ -192,52 +158,36 @@ public class Konane extends ThreadedKonane{
 		            System.out.println("\n"+turnTime+"\n");
 		            //records time and turn to array
 		            times.add(turnTime);
+		            //board.manualOverride();
 		            }
 		            /** if PLAYING AGAINST ITSELF OR A SIMILAR AI W A DIFFERENT SEF**/
 		            //same as above
-		            if((evalBoard.zpgame) && (AIturn==false)){
-		            	
-		            	
-						turnStart = System.nanoTime();
-						evalBoard.coordinate(1);
-						
-						evalBoard.comparison();
-						evalBoard.cleanTurn();
-						//Initiates threads, calls them on the rows of the board
-			            //Alpha and Beta NOT set to Min and Max at first call.  This has improved efficiency and reduced error.
-			            //They ARE set to MAX and MIN later.
-						//th1( &board::threadKonane, &board1, 0, 1,2,depth,AIcolor);
+		            if((board.zpgame) && (AIturn==false)){
 
-						//Joins threads to main program after program run (some efficiencies to realize here).
-						
-						//makes a comparison between the 8 boards and selects the ideal board from them
-			            
-						
-						
-						//board = evalBoard.comparison(board1, board2, board3, board4, board5, board6, board7, board8);
-			            
-						//displays prior board
-		                evalBoard.display();
+		            	turnStart = System.nanoTime();
+		            	state=board.ABMax(1, 2, level, depth, humanColor);
+		    			board.display();
 		                //if no valid moves
-		                if(evalBoard.bval<-500){
+
+		                board.makeMove(board.bestmove, humanColor);
+		                board.displayMove();
+
+		                board.display();
+		                if(board.bval<-500){
 		                System.out.println("Game over, White loses");
 		                break;
 		                }
-		                evalBoard.makeMove(evalBoard.bestmove, humanColor);
-		                evalBoard.displayMove();
-
-		                evalBoard.display();
-
 
 		                AIturn = true;
 		                turn++;
 		                //record timing.
 		                turnTime = (System.nanoTime()-turnStart);
-		                //System.out.println("\n"+turnTime+"\n");
+		               //System.out.println("\n"+turnTime+"\n");
 		                times.add(turnTime);
+		                //board.manualOverride();
 		                }
 		            /** if PLAYING A HUMAN**/
-				if((! evalBoard.zpgame) && (AIturn==false)) {
+				if((! board.zpgame) && (AIturn==false)) {
 		            do{
 		                System.out.println("\nenter piece to move column, 1-8: ");
 		                //source column
@@ -245,36 +195,35 @@ public class Konane extends ThreadedKonane{
 		                //Accommodate indexing
 		                j--;
 		                //enters player move into array
-		                evalBoard.bestmove[1]=j;
+		                board.bestmove[1]=j;
 		                System.out.println("\nenter piece to move row, 1-8: ");
 		                i=read.nextInt();
 		                i--;
 		                //source row
-		                evalBoard.bestmove[0]=i;
+		                board.bestmove[0]=i;
 		                System.out.println("\nenter piece destination column, 1-8: ");
 		                m =read.nextInt();
 		                m--;
 		                //destination column
-		                evalBoard.bestmove[3]=m;
+		                board.bestmove[3]=m;
 		                System.out.println("\nenter piece destination row, 1-8: ");
 		                k =read.nextInt();
 		                k--;
 		                //destination row
-		                evalBoard.bestmove[2]=k;
-		                legalHumMove=evalBoard.guardRails();
+		                board.bestmove[2]=k;
+		                legalHumMove=board.guardRails();
 		            }while(! legalHumMove);
 		            //is this move legal?
 
 
-					evalBoard.makeMove(evalBoard.bestmove,humanColor);
-					evalBoard.displayMove();
-					evalBoard.display();
+					board.makeMove(board.bestmove,humanColor);
+					board.displayMove();
+					board.display();
 					turn++;
 					AIturn=true;
 					}
 		        System.out.println(  "\nassuming correct board and continue\n");
-			}
-			
+			}			
 			long gameEnd = (System.nanoTime()-gameStart);
 			float totalSeconds = gameEnd/1000000000;
 			System.out.println("finished in "+turn+" turns");
@@ -283,13 +232,8 @@ public class Konane extends ThreadedKonane{
 		    	System.out.println("turn " +z+1+ " took "+times.get(z)+" nanoseconds \n");
 		    	}
 		    write_csv(times);
+		    read.close();
 		}
-
-
-
-
-
-
 
 
 
